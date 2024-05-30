@@ -43,18 +43,6 @@ class SuicideDetectionClassifier(pl.LightningModule):
         loss = self.loss(y_hat, y)
         return {'loss': loss, 'log': {'train_loss': loss}}
 
-    # def validation_step(self, batch, batch_idx):
-    #     y, x = batch['label'], batch['input_ids']
-    #     y_hat = self.forward(x)
-    #     loss = self.loss(y_hat, y)
-    #     acc = (y_hat.argmax(-1) == y).float()
-    #     return {'loss': loss, 'acc': acc}
-
-    # def validation_epoch_end(self, outputs):
-    #     loss = pt.cat([output['loss'] for output in outputs], 0).mean()
-    #     acc = pt.cat([output['acc'] for output in outputs], 0).mean()
-    #     out = {'val_loss': loss, 'val_acc': acc}
-    #     return {**out, 'log': out}
 
     def configure_optimizers(self):
         optimizer = pt.optim.Adam(self.parameters(), lr=1e-5)
@@ -62,9 +50,7 @@ class SuicideDetectionClassifier(pl.LightningModule):
 
 
 def load_model(path=model_urls["params"], progress=True):
-    # model = SuicideDetectionClassifier.load_from_checkpoint("/Users/beyzayildirim/Downloads/model.pt", map_location=pt.device("cpu"))
     model = pt.load("./model.pt", map_location=pt.device("cpu"))
-    # load_state_dict_from_url(model_urls.get(path), progress=progress)
     return model
 
 
@@ -75,6 +61,4 @@ def pred(text: str, model):
                          return_tensors='pt',
                          padding='max_length',
                          truncation=True)
-    # 0 = not suicidal
-    # 1 = suicidal
     return np.argmax(pt.nn.Softmax()(model(x)).view(-1).detach().numpy())

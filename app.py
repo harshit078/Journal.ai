@@ -100,7 +100,7 @@ def main():
     # page = "Home"
 
     with st.sidebar:
-        st.title("better.me")
+        st.title("Journal.ai")
         if st.button("🏠     Home"): st.session_state.page = "Home"
         if st.button("📝     Journal"): st.session_state.page = "Journal"
         if st.button("📕     Previous Journals"): st.session_state.page = "Previous Journals"
